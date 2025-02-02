@@ -1,0 +1,14 @@
+.venv/
+.env
+
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+*.log
+*.sqlite
+.DS_Store
+
+pip-wheel-metadata/
+*.egg-info/
