@@ -8,10 +8,11 @@ CITIES = {
     "Дніпро": "Dnipro"
 }
 
+
 def get_weather_keyboard():
-    kb = InlineKeyboardMarkup(row_width=2)
+    buttons = [
+        [InlineKeyboardButton(text=city_ua, callback_data=f"weather_{city_en}")]
+        for city_ua, city_en in CITIES.items()
+    ]
 
-    for city_ua, city_en in CITIES.items():
-        kb.insert(InlineKeyboardButton(text=city_ua, callback_data=f"weather_{city_en}"))
-
-    return kb
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

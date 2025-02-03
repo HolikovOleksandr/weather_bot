@@ -7,7 +7,7 @@ from aiogram.types import Message, CallbackQuery
 from dotenv import load_dotenv
 
 from get_weather import get_weather
-from keyboards import get_weather_keyboard  # Виправив ім'я модуля!
+from keyboards import get_weather_keyboard
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
