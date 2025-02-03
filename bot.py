@@ -31,7 +31,11 @@ async def weather_callback_handler(callback_query: CallbackQuery):
     city = callback_query.data.split("_")[1]
     weather_info = await get_weather(city)
 
-    await callback_query.message.answer(weather_info)
+    await callback_query.message.edit_text(
+        text=weather_info,
+        reply_markup=get_weather_keyboard()
+    )
+
     await callback_query.answer()
 
 
