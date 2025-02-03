@@ -1,31 +1,35 @@
-import asyncio
 import os
+import asyncio
 import  logging
-from get_weather import  get_weather
+
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from dotenv import load_dotenv
 
+from get_weather import  get_weather
+from  keybords import get_weather_keyboard
+
 load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-@dp.message(lambda msg: msg.text.lower() == '/start')
-async def start_handler(msg: Message):
-    await msg.answer("🤖Привіт! Я твій бот!")
 
-@dp.message(lambda msg: msg.text.lower() == "/help")
-async  def help_handler(msg: Message):
-    await msg.answer("👨‍💻Ось доступні команди:\n/start - почати роботу з ботом\n/help - допомога\n/weather - погода в Київі")
+@dp.message_handler(commands=['weather', 'start'])
+async def send_weather_keyboard(message: Message):
+    keyboard = get_weather_keyboard()
+    await message.answer("Оберіть місто:", reply_markup=keyboard)
 
-@dp.message(lambda msg: msg.text.lower() == '/weather')
-async  def weather_handler(msg: Message):
-    weather_info = await get_weather('Kyiv')
-    print(weather_info.upper())
-    await msg.answer(weather_info)
+
+@dp.callback_query(lambda c: c.data.startswith('weather_'))
+async def weather_callback_handler(callback_query: CallbackQuery):
+    city = callback_query.data.split("_")[1]
+    weather_info = await get_weather(city)
+
+    await bot.send_message(callback_query.from_user.id, weather_info)
+    await callback_query.answer()
 
 
 async def main():
