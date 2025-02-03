@@ -17,7 +17,7 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-@dp.message_handler(commands=['weather', 'start'])
+@dp.message(commands=['weather', 'start'])
 async def send_weather_keyboard(message: Message):
     keyboard = get_weather_keyboard()
     await message.answer("Оберіть місто:", reply_markup=keyboard)
