@@ -6,8 +6,8 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from dotenv import load_dotenv
 
-from get_weather import get_weather
-from keyboards import get_weather_keyboard
+from get_weather_data import get_weather_data
+from keyboards import get_weather_keyboard, get_ua_city_name
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -28,12 +28,22 @@ async def send_weather_keyboard(message: Message):
 
 @router.callback_query(F.data.startswith('weather_'))
 async def weather_callback_handler(callback_query: CallbackQuery):
-    city = callback_query.data.split("_")[1]
-    weather_info = await get_weather(city)
+    city_en = callback_query.data.split("_")[1]
+    city_ua = get_ua_city_name(city_en)
+
+    data = await get_weather_data(city_en)
+    weather = (
+        f"*📍 Погода в місті {city_ua}*\n\n"
+        f"🌡️ Температура: *{data['temp']:.1f}°C*\n"
+        f"😓 Відчувається як: *{data['feels']:.1f}°C*\n"
+        f"💧 Вологість: *{data['humidity']}%*\n"
+        f"🌬️ Швидкість вітру: *{data['wind_speed']} м/с*"
+    )
 
     await callback_query.message.edit_text(
-        text=weather_info,
-        reply_markup=get_weather_keyboard()
+        reply_markup=get_weather_keyboard(),
+        parse_mode='Markdown',
+        text=weather
     )
 
     await callback_query.answer()

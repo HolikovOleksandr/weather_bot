@@ -5,7 +5,9 @@ CITIES = {
     "Львів": "Lviv",
     "Одеса": "Odesa",
     "Харків": "Kharkiv",
-    "Дніпро": "Dnipro"
+    "Дніпро": "Dnipro",
+    "Луцьк": "Lutsk",
+    "Маріуполь": "Mariupol"
 }
 
 
@@ -16,3 +18,11 @@ def get_weather_keyboard():
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+def get_ua_city_name(city_en: str) -> str:
+    for city_ua, city_eng in CITIES.items():
+        if city_eng == city_en:
+            return city_ua
+
+    return city_en
